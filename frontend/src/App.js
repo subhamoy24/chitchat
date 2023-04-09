@@ -7,7 +7,6 @@ import Dashboard from "./components/Dashboard";
 import Authenticate from "./components/Authenticate";
 import ChatRoom from "./components/ChatRoom";
 import ChatList from "./components/ChatList";
-import Notfound from "./components/Notfound";
 
 
 function App() {
@@ -23,7 +22,6 @@ function App() {
         } />
         <Route path="/sign-up" element={<Signup/>}/>
         <Route path="/login" element={<Login/>} />
-        <Route  path= "/*" element={<Notfound/>} />
       </Routes>      
     </div>
   );
