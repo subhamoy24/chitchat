@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -32,6 +33,7 @@
     "react-scripts": "5.0.1",
     "redux": "^4.2.1",
     "socket.io-client": "^4.6.1",
+    "spa-http-server": "^0.9.0",
     "styled-components": "^5.3.9",
     "web-vitals": "^2.1.4"
   },

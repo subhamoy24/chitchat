@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client"
-var  socket = io.connect(process.env.END_POINT);
+var  socket = io.connect(process.env.REACT_APP_END_POINT);
 const SingleChat = () => {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");

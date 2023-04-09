@@ -12,7 +12,7 @@ const UserItem = ({user}) => {
   const chatHandler = async () => {
 
     try {
-      const data = await axios.post(`${process.env.END_POINT}/api/chat`, {userId1: logged_user._id, userId2: user._id });
+      const data = await axios.post(`${process.env.REACT_APP_END_POINT}/api/chat`, {userId1: logged_user._id, userId2: user._id });
       const chat = data.data.chat;
       const chat_id = chat._id;
       console.log(chat_id);

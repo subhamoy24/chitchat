@@ -29,7 +29,7 @@ export default function Signup() {
 
   async function onSubmit(values) {
     try {
-      const resopnse = await axios.post(`${process.env.END_POINT}/api/user`, values);
+      const resopnse = await axios.post(`${process.env.REACT_APP_END_POINT}/api/user`, values);
       const data = resopnse.data;
       console.log(data);
       if(data) {

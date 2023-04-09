@@ -7,16 +7,14 @@ import Dashboard from "./components/Dashboard";
 import Authenticate from "./components/Authenticate";
 import ChatRoom from "./components/ChatRoom";
 import ChatList from "./components/ChatList";
+import Notfound from "./components/Notfound";
 
 
 function App() {
   return (
     <div className="App">
       <Routes>
-
-      <Route path="/" exact element={<ChatList/>}/>
-      
-        
+        <Route path="/" exact element={<ChatList/>}/>
         <Route path="/dashboard" element={
           <Authenticate child={<Dashboard/>}/>
         } />
@@ -25,6 +23,7 @@ function App() {
         } />
         <Route path="/sign-up" element={<Signup/>}/>
         <Route path="/login" element={<Login/>} />
+        <Route  path= "/*" element={<Notfound/>} />
       </Routes>      
     </div>
   );

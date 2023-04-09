@@ -20,7 +20,6 @@ const ChatList = () => {
   
 
   const navigate = useNavigate();
-  const params = useParams();
 
   const dmHandler = async() => {
     if(userList.length == 0) {
@@ -63,13 +62,17 @@ const ChatList = () => {
     setChats(data.data);
   }
   useEffect(() => {
-    console.log(process.env.REACT_APP_END_POINT);
+    console.log(process.env.REACT_APP_END_POINT, "ppp");
+    if(!logged_user) {
+      navigate('/login');
+    }
     getChats();
     onClose();
-  }, [params.id])
+  }, [])
 
  
   return(
+   logged_user ?
    <Box ml={[0, 10, 100]} mr={[0, 10, 100]} mt={[0, 5, 10]} minH={["100vh", "100vh", "870"]}>
     <DirectMessage userList={userList} onClose={onClose} isOpen={isOpen}/>
     <Flex minH="inherit">
@@ -119,7 +122,7 @@ const ChatList = () => {
       </Box>
     
     </Flex>
-    </Box>  
+    </Box> : "" 
   )
 }
 

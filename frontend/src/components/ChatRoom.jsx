@@ -32,7 +32,7 @@ const ChatRoom = () => {
   
   const dmHandler = async() => {
     if(userList.length == 0) {
-      const result = await axios.get(`${process.env.END_POINT}/api/user/list`);
+      const result = await axios.get(`${process.env.REACT_APP_END_POINT}/api/user/list`);
       setUserList((prev) => [...prev, ...result.data]);
       console.log(result.data);
     }
@@ -42,7 +42,7 @@ const ChatRoom = () => {
   
 
   const updateChats = async () => {
-    const data = await axios.get(`${process.env.END_POINT}/api/chat/user-chats?userId=${logged_user._id}`);
+    const data = await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/user-chats?userId=${logged_user._id}`);
     console.log(data.data);
     setChats(data.data);
   }
@@ -50,7 +50,7 @@ const ChatRoom = () => {
   const onChatSelect = async (chatId) => {
     try {
       console.log(chatId);
-      const data = await axios.get(`${process.env.END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${chatId}`);
+      const data = await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${chatId}`);
       console.log(data)
       navigate(`/chat/${chatId}`);
     }catch(err) {
@@ -61,8 +61,8 @@ const ChatRoom = () => {
   const getChatDetails = async () => {
     try{
       console.log(logged_user);
-      await axios.get(`${process.env.END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${params.id}`);
-      const data = await axios.get(`${process.env.END_POINT}/api/chat/details?chatId=${params.id}`);
+      await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${params.id}`);
+      const data = await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/details?chatId=${params.id}`);
       const chatDetails = data.data;
       const chat = data.data.chat;
       const chatMessages = data.data.messages;
@@ -84,7 +84,7 @@ const ChatRoom = () => {
 
       setLoading(false);
       if(chat) {
-        socket = io.connect(process.env.END_POINT);
+        socket = io.connect(process.env.REACT_APP_END_POINT);
         await socket.emit("join_room", logged_user._id);
         socket.on("receive_message", (data) => {
           console.log(data)
@@ -96,7 +96,7 @@ const ChatRoom = () => {
           if(data.chat !== selectedChat) {
             updateChats();
           } else {
-            await axios.get(`${process.env.END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${selectedChat._id}`);
+            await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${selectedChat._id}`);
             updateChats();
           }
         });
@@ -109,7 +109,7 @@ const ChatRoom = () => {
     
   }
   const getChats = async () => {
-    const data = await axios.get(`${process.env.END_POINT}/api/chat/user-chats?userId=${logged_user._id}`);
+    const data = await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/user-chats?userId=${logged_user._id}`);
     console.log(data.data);
     setChats(data.data);
   }
@@ -124,7 +124,7 @@ const ChatRoom = () => {
 
   const sendMessage = async () => {
     try {
-      const data = await axios.post(`${process.env.END_POINT}/api/message`, {sender: logged_user._id, content: message, chat: params.id});
+      const data = await axios.post(`${process.env.REACT_APP_END_POINT}/api/message`, {sender: logged_user._id, content: message, chat: params.id});
       const receive_message = data.data.message;
       if(receive_message) {
         console.log(receive_message);

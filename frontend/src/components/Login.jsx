@@ -29,7 +29,8 @@ export default function Login() {
 
   async function onSubmit(values) {
     try {
-      const resopnse = await axios.post(`${process.env.END_POINT}/api/user/login`, values);
+      console.log(`${process.env.REACT_APP_END_POINT}/api/user/login`);
+      const resopnse = await axios.post(`${process.env.REACT_APP_END_POINT}/api/user/login`, values);
       const data = resopnse.data;
       console.log(data);
       if(data) {
@@ -51,8 +52,10 @@ export default function Login() {
     }
 
   }
+  console.log(`${process.env.REACT_APP_END_POINT}`)
 
   return (
+   
     <Container>
     <Card maxW='md' marginTop="10">
       <CardHeader>
