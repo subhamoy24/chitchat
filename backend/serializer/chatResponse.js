@@ -3,6 +3,9 @@ const Message = require("../models/message");
 const chatResponse =  async (chats, userId) => {
   res = []
   for(const c of chats) {
+    if(!c.latestMessage) {
+      continue;
+    }
     d = {};
     d['_id'] = c._id;
     d['chatName'] = c.chatName;

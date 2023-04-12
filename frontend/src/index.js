@@ -10,6 +10,7 @@ import counterReducer from './reducer/counterReducer';
 import userReducer from './reducer/userReducer';
 
 import { Provider } from 'react-redux';
+import SentStatus from './components/SentStatus';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,11 +19,13 @@ export const store = configureStore({
   reducer: {
     user: userReducer
   },
-})
+});
+
 root.render(
   <ChakraProvider>
     <BrowserRouter>
       <Provider store={store}>
+        <SentStatus/>
         <App />
       </Provider>
     </BrowserRouter>

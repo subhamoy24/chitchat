@@ -10,9 +10,12 @@ import ChatIcon from "@material-ui/icons/Chat";
 import DirectMessage from "./DirectMessage";
 
 var  socket;
+var updateStatus;
 
 const ChatRoom = () => {
   const logged_user = useSelector((state) => state.user.value);
+  const [userOnline, setUserOnline] = useState(false);
+
   const [endUser, setEndUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
@@ -85,7 +88,25 @@ const ChatRoom = () => {
       setLoading(false);
       if(chat) {
         socket = io.connect(process.env.REACT_APP_END_POINT);
-        await socket.emit("join_room", logged_user._id);
+        socket.on("reload", async (data) => {
+          console.log("poi")
+          await socket.emit("join_room", logged_user._id);
+          socket.emit("end_user_connect", endUser._id);
+        });
+
+        socket.on("online", (data) => {
+          clearTimeout(updateStatus);
+          if(endUser) {
+            if(endUser._id == data) {
+              setUserOnline(true)
+              console.log("online");
+              updateStatus = setTimeout(() => setUserOnline(false), 5000);
+            } else {
+              setUserOnline(false)
+            }
+          }
+        });
+
         socket.on("receive_message", (data) => {
           console.log(data)
           setMessages((prev_messages) => [data, ...prev_messages]);
@@ -194,8 +215,9 @@ const ChatRoom = () => {
       <Flex flex='1' gap='4' flexWrap='wrap'  p="4" bg="#f0ff2f8a" height="70px">
         <Avatar name={endUser.firstName + " " + endUser.lastName} src='https://bit.ly/sage-adebayo' />
 
-        <Flex alignSelf="center">
+        <Flex alignSelf="center" flexDirection="column">
           <Heading size='sm'>{endUser.firstName + " " + endUser.lastName}</Heading>
+          <Text>{userOnline ? "online" : ""}</Text>
         </Flex>
       </Flex>
 

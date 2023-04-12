@@ -34,10 +34,24 @@ const  io = new Server(server, {
 
 });
 
+var sentHolder = {}
 io.on("connection", (socket) => {
+  if(!sentHolder[socket.id]) {
+    socket.emit("reload", "reload");
+    sentHolder[socket.id] = true;
+  }
+
   socket.on("join_room", (data) => {
     console.log(data);
     socket.join(data);
+  });
+
+  socket.on("end_user_connect", (data) => {
+    socket.join("end"+data);
+  });
+
+  socket.on("online", (data) => {
+    socket.to("end"+data).emit("online", data);
   });
 
   socket.on("send_message", async (data) => {

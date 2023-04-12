@@ -59,7 +59,6 @@ const chatDetails = asyncHandler(async (req, res) => {
   console.log(isChat);
   if (isChat) {
     const messages = await Message.find({chat: isChat._id}).populate("sender", "-password");
-    console.log(messages)
     res.status(200).json({chat: isChat, messages: messages});
 
   }
