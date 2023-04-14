@@ -190,7 +190,7 @@ const ChatRoom = () => {
             
             return(
             <>
-            <Flex p="3" justifyContent="space-between" pr="10" bg={selectedChat == c._id ? "gray" : ""} onClick={() => onChatSelect(c._id)}>
+            <Flex p="3" cursor="pointer" justifyContent="space-between" pr="10" bg={selectedChat == c._id ? "gray" : ""} onClick={() => onChatSelect(c._id)}>
 
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
             <Avatar name={chatUser.firstName +" " + chatUser.lastName} src='https://bit.ly/sage-adebayo' />

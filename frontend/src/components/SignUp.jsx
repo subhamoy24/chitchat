@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 
 import {
   FormErrorMessage,
@@ -13,11 +13,16 @@ import {
   Divider,
   Heading,
   Container,
-  useToast
+  useToast,
+  Flex,
+  Box
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 export default function Signup() {
+  const logged_user = useSelector((state) => state.user.value)
   const {
        handleSubmit,
        register,
@@ -26,6 +31,13 @@ export default function Signup() {
   } = useForm()
   const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(logged_user) {
+      navigate("/dashboard");
+    }
+
+  }, [])
 
   async function onSubmit(values) {
     try {
@@ -59,8 +71,10 @@ export default function Signup() {
   }
 
   return (
-    <Container>
-    <Card maxW='md' marginTop="10">
+    <Box bg="aqua" h="100vh">
+    <Container h="100%">
+    <Flex flexDirection="column" h="100%" justifyContent="center" alignItems="center" >
+    <Card maxW='md' marginTop="10" w="100%">
       <CardHeader>
         <Heading size="md" textAlign="center">Signup</Heading>
       </CardHeader>
@@ -165,6 +179,12 @@ export default function Signup() {
        </form>
       </CardBody>
     </Card>
+    <Flex>
+      <p>Already sign up log in now - &gt;</p>
+      <Link to="/login">login</Link>
+    </Flex>
+    </Flex>
   </Container>
+  </Box>
   )
 }

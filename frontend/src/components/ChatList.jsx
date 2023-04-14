@@ -23,7 +23,7 @@ const ChatList = () => {
 
   const dmHandler = async() => {
     if(userList.length == 0) {
-      const result = await axios.get(`${process.env.REACT_APP_END_POINT}/api/user/list`);
+      const result = await axios.get(`${process.env.REACT_APP_END_POINT}/api/user/list?page=1`);
       setUserList((prev) => [...prev, ...result.data]);
       console.log(result.data);
     }
@@ -41,7 +41,7 @@ const ChatList = () => {
   const onChatSelect = async (chatId) => {
     try {
       console.log(chatId);
-      const data = await axios.get(`${process.env.REACT_APP_END_POINT4}/api/chat/view-chat?userId=${logged_user._id}&chatId=${chatId}`);
+      const data = await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${chatId}`);
       console.log(data)
       navigate(`/chat/${chatId}`);
     }catch(err) {
@@ -74,7 +74,7 @@ const ChatList = () => {
   return(
    logged_user ?
    <Box ml={[0, 10, 100]} mr={[0, 10, 100]} mt={[0, 5, 10]} minH={["100vh", "100vh", "870"]}>
-    <DirectMessage userList={userList} onClose={onClose} isOpen={isOpen}/>
+    <DirectMessage userList={userList} onClose={onClose} isOpen={isOpen} setUserList={setUserList}/>
     <Flex minH="inherit">
       <Box w="100%" >
         <Flex justifyContent="space-between" pr="4" bg="#f0ff2f8a" height="70px" flexWrap='wrap'>
@@ -99,7 +99,7 @@ const ChatList = () => {
             
             return(
             <>
-            <Flex p="3" justifyContent="space-between" pr="10" bg={selectedChat == c._id ? "gray" : ""} onClick={() => onChatSelect(c._id)}>
+            <Flex cursor="pointer" p="3" justifyContent="space-between" pr="10" bg={selectedChat == c._id ? "gray" : ""} onClick={() => onChatSelect(c._id)}>
 
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
             <Avatar name={chatUser.firstName +" " + chatUser.lastName} src='https://bit.ly/sage-adebayo' />

@@ -12,16 +12,19 @@ import ChatList from "./components/ChatList";
 function App() {
   return (
     <div className="App">
+      
       <Routes>
-        <Route path="/" exact element={<ChatList/>}/>
+        <Route path="/" exact element={<Signup/>}/>
+        <Route path="/Login" exact element={<Login/>}/>
+
+        <Route path="/signup" exact element={<Signup/>}/>
+
         <Route path="/dashboard" element={
           <Authenticate child={<Dashboard/>}/>
         } />
         <Route path="/chat/:id" element={
           <Authenticate child={<ChatRoom/>}/>
         } />
-        <Route path="/sign-up" element={<Signup/>}/>
-        <Route path="/login" element={<Login/>} />
       </Routes>      
     </div>
   );
