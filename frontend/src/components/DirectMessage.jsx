@@ -36,10 +36,10 @@ export default function DirectMessage({userList, isOpen, onClose, setUserList}){
   }
 
   const searchChange = async (e) => {
+    setSearchTerm(e.target.value);
     try {
     const result = await axios.get(`${process.env.REACT_APP_END_POINT}/api/user/list?page=1&search=${e.target.value}`);
     setPage(2);
-    setSearchTerm(e.target.value);
     setUserList(result.data);
     } catch(e) {
 
