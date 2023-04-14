@@ -6,14 +6,15 @@ const SentStatus = () => {
   const logged_user = useSelector((state) => state.user.value);
 
   useEffect(() => {
-    const socket = io.connect(process.env.REACT_APP_END_POINT);
-    const sent = () => {
-      console.log("lop");
-      socket.emit("online", logged_user._id);
+    if(logged_user) {
+      const socket = io.connect(process.env.REACT_APP_END_POINT);
+      const sent = () => {
+        console.log("lop");
+        socket.emit("online", logged_user._id);
+      }
+  
+      setInterval(sent, 3000)
     }
-
-    setInterval(sent, 3000)
-
   }, [])
 
   return(

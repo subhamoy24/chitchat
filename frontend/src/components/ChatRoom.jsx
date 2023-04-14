@@ -8,6 +8,7 @@ import io from "socket.io-client";
 import { Badge, IconButton } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import DirectMessage from "./DirectMessage";
+import Logout from "./Logout";
 
 var  socket;
 var updateStatus;
@@ -67,15 +68,19 @@ const ChatRoom = () => {
       await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${params.id}`);
       const data = await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/details?chatId=${params.id}`);
       const chatDetails = data.data;
+      console.log(chatDetails);
       const chat = data.data.chat;
       const chatMessages = data.data.messages;
       console.log(chatDetails);
-      
+      var endU = null
       if(!chat.isGroupChat) {
         if(chat.users[0]._id == logged_user._id) {
           setEndUser(chat.users[1]);
+          endU = chat.users[1]
         } else {
           setEndUser(chat.users[0]); 
+          endU = chat.users[1]
+
         }
       } else {
 
@@ -86,18 +91,20 @@ const ChatRoom = () => {
       setSelectedChat(params.id);
 
       setLoading(false);
-      if(chat) {
+      if(chat && endU) {
         socket = io.connect(process.env.REACT_APP_END_POINT);
         socket.on("reload", async (data) => {
           console.log("poi")
           await socket.emit("join_room", logged_user._id);
-          socket.emit("end_user_connect", endUser._id);
+          console.log(endU);
+          socket.emit("end_user_connect", endU._id);
         });
 
         socket.on("online", (data) => {
           clearTimeout(updateStatus);
-          if(endUser) {
-            if(endUser._id == data) {
+          console.log(endU);
+          if(endU) {
+            if(endU._id == data) {
               setUserOnline(true)
               console.log("online");
               updateStatus = setTimeout(() => setUserOnline(false), 5000);
@@ -176,6 +183,7 @@ const ChatRoom = () => {
             <Heading size='sm'>{logged_user.name}</Heading>
           </Box>
         </Flex>
+        <Logout/>
         <IconButton color="black" onClick={dmHandler}>
           <ChatIcon/>
         </IconButton>

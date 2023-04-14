@@ -8,6 +8,7 @@ import io from "socket.io-client";
 import { Badge, IconButton } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import DirectMessage from "./DirectMessage";
+import Logout from "./Logout";
 
 var  socket;
 
@@ -61,11 +62,15 @@ const ChatList = () => {
     console.log(data.data);
     setChats(data.data);
   }
+
   useEffect(() => {
-    console.log(process.env.REACT_APP_END_POINT, "ppp");
     if(!logged_user) {
       navigate('/login');
     }
+  },[])
+
+  useEffect(() => {
+    
     getChats();
     onClose();
   }, [])
@@ -85,6 +90,7 @@ const ChatList = () => {
             <Heading size='sm'>{logged_user.name}</Heading>
           </Box>
         </Flex>
+        <Logout/>
         <IconButton color="black" onClick={dmHandler}>
           <ChatIcon/>
         </IconButton>
