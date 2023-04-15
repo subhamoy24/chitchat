@@ -79,7 +79,7 @@ const ChatRoom = () => {
           endU = chat.users[1]
         } else {
           setEndUser(chat.users[0]); 
-          endU = chat.users[1]
+          endU = chat.users[0]
 
         }
       } else {

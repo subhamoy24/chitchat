@@ -5,6 +5,7 @@ const Logout = () => {
   const navigate = useNavigate();
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
+    window.location.reload();
     navigate("/login")
   }
   return(

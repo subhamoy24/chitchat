@@ -51,6 +51,7 @@ export default function Login() {
     
         localStorage.setItem("userInfo", JSON.stringify(data));
         console.log(data);
+        window.location.reload();
         navigate("/dashboard");
 
       }
@@ -74,7 +75,7 @@ export default function Login() {
     <Flex h="100%" justifyContent="center" alignItems="center" flexDirection="column">
     <Card maxW='md' marginTop="10" width="100%">
       <CardHeader>
-        <Heading size="md" textAlign="center">Signup</Heading>
+        <Heading size="md" textAlign="center">Login</Heading>
       </CardHeader>
       <Divider/>
       <CardBody>

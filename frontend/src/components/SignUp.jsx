@@ -54,6 +54,7 @@ export default function Signup() {
         });
         localStorage.setItem("userInfo", JSON.stringify(data));
         console.log(data);
+        window.location.reload();
         navigate("/chats");
 
       }
