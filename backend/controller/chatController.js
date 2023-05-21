@@ -5,6 +5,18 @@ const Message = require("../models/message");
 const { response } = require("express");
 const { chatResponse } = require("../serializer/chatResponse");
 
+const createGroup = asyncHandler(async (req, res) => {
+  const {users, admin, chatName} = req.body;
+  console.log(users, admin, chatName)
+  const chat = await Chat.create({chatName: chatName, users: users, isGroupChat: true, groupAdmin: admin});
+  const FullChat = await Chat.findOne({ _id: chat._id }).populate(
+    "users",
+    "-password"
+  );
+  
+  res.status(200).json({chat:FullChat, messages: []});
+});
+
 const accessChat = asyncHandler(async (req, res) => {
   const { userId1, userId2 } = req.body;
 
@@ -48,7 +60,6 @@ const accessChat = asyncHandler(async (req, res) => {
 
 const chatDetails = asyncHandler(async (req, res) => {
   const { chatId } = req.query;
-  console.log(req.query);
   if (!chatId) {
     console.log("Chat param not sent with request");
     return res.sendStatus(400);
@@ -56,7 +67,6 @@ const chatDetails = asyncHandler(async (req, res) => {
 
   const isChat = await Chat.findOne({_id: chatId}).populate("users", "-password").populate("latestMessage");
 
-  console.log(isChat);
   if (isChat) {
     const messages = await Message.find({chat: isChat._id}).populate("sender", "-password");
     res.status(200).json({chat: isChat, messages: messages});
@@ -83,6 +93,6 @@ const viewChat = asyncHandler(async (req, res) => {
 
   res.status(200).json({chatId: chatId});
 });
-module.exports = { accessChat, chatDetails, userChats, viewChat };
+module.exports = { accessChat, chatDetails, userChats, viewChat, createGroup };
 
 

@@ -36,13 +36,13 @@ const  io = new Server(server, {
 
 var sentHolder = {}
 io.on("connection", (socket) => {
-  if(!sentHolder[socket.id]) {
+  if(sentHolder[socket.id] == null) {
     socket.emit("reload", "reload");
     sentHolder[socket.id] = true;
   }
 
   socket.on("join_room", (data) => {
-    console.log(data);
+    console.log(data, socket.id);
     socket.join(data);
   });
 
@@ -56,6 +56,7 @@ io.on("connection", (socket) => {
 
   socket.on("send_message", async (data) => {
     const chat = await Chat.findOne({_id: data.chatId});
+    console.log(chat.users);
 
     for(var i = 0; i < chat.users.length; i++){
       console.log(chat.users[i]);
@@ -67,9 +68,9 @@ io.on("connection", (socket) => {
   
 
   socket.on("disconnect", (data) => {
+    sentHolder[socket.id] = null;
     console.log(data)
   });
-
 
 });
 
