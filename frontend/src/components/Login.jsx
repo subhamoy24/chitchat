@@ -20,6 +20,8 @@ import {
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import { GoogleLogin } from '@react-oauth/google';
+
 
 export default function Login() {
   const logged_user = useSelector((state) => state.user.value)
@@ -67,6 +69,32 @@ export default function Login() {
     }
 
   }
+
+  async function googleLogin(credential) {
+    try {
+      const resopnse = await axios.post(`${process.env.REACT_APP_END_POINT}/api/user/login`, { token: credential.credential });
+
+      const data = resopnse.data;
+      console.log(data);
+      if(data) {
+    
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        console.log(data);
+        window.location.reload();
+        navigate("/dashboard");
+
+      }
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  }
   console.log(`${process.env.REACT_APP_END_POINT}`)
 
   return (
@@ -81,7 +109,7 @@ export default function Login() {
       <CardBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={errors.email}>
-            <FormLabel htmlFor='email'>Email Name</FormLabel>
+            <FormLabel htmlFor='email'>Email</FormLabel>
               <Input
                 id='email'
                 placeholder="Email"
@@ -120,6 +148,15 @@ export default function Login() {
         </form>
       </CardBody>
     </Card>
+    
+    <GoogleLogin
+            onSuccess={credentialResponse => {
+              googleLogin(credentialResponse)
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}>
+    </GoogleLogin>
 
     <Flex>
       <p>Not signup yet - &gt;</p>
@@ -127,6 +164,7 @@ export default function Login() {
     </Flex>
     </Flex>
   </Container>
+
   </Box>
   )
 }

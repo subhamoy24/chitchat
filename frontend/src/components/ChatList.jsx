@@ -111,7 +111,7 @@ const ChatList = () => {
             <Avatar name={chatUser.firstName +" " + chatUser.lastName} src='https://bit.ly/sage-adebayo' />
           
             <Box>
-              <Heading size='sm'>{chatUser.firstName +" " + chatUser.lastName}</Heading>
+              {c.isGroupChat ? <Heading size='sm'>{c.chatName}</Heading> : <Heading size='sm'>{chatUser.firstName +" " + chatUser.lastName}</Heading>}
               <Text>{c.latestMessage.content}</Text>
             </Box>
             </Flex>

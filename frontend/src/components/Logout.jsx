@@ -1,6 +1,7 @@
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router';
-import { IconButton } from '@chakra-ui/react';
+import { IconButton } from "@material-ui/core";
+
 const Logout = () => {
   const navigate = useNavigate();
   const logoutHandler = () => {

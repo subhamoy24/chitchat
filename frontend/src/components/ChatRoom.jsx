@@ -9,6 +9,7 @@ import { Badge, IconButton } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import DirectMessage from "./DirectMessage";
 import Logout from "./Logout";
+import GroupMessage from "./GroupMessage";
 
 var  socket;
 var updateStatus;
@@ -18,6 +19,8 @@ const ChatRoom = () => {
   const [userOnline, setUserOnline] = useState(false);
 
   const [endUser, setEndUser] = useState(null);
+  const [endGroupUser, setEndGroupUser] = useState(null);
+
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -71,7 +74,6 @@ const ChatRoom = () => {
       console.log(chatDetails);
       const chat = data.data.chat;
       const chatMessages = data.data.messages;
-      console.log(chatDetails);
       var endU = null
       if(!chat.isGroupChat) {
         if(chat.users[0]._id == logged_user._id) {
@@ -83,16 +85,23 @@ const ChatRoom = () => {
 
         }
       } else {
-
+        const others = []
+        for(let i = 0; i < chat.users.length; i++) {
+          if(chat.users[i]._id != logged_user._id) {
+            others.push(chat.users[i])
+          }
+        }
+        setEndGroupUser(others);
       }
 
       chatMessages.reverse()
       setMessages(chatMessages);
-      setSelectedChat(params.id);
+      setSelectedChat(chat);
 
       setLoading(false);
       if(chat && endU) {
         socket = io.connect(process.env.REACT_APP_END_POINT);
+
         socket.on("reload", async (data) => {
           console.log("poi")
           await socket.emit("join_room", logged_user._id);
@@ -121,7 +130,7 @@ const ChatRoom = () => {
 
         socket.on("receive_chat", async (data) => {
           console.log(data)
-          if(data.chat !== selectedChat) {
+          if(data.chat !== selectedChat._id) {
             updateChats();
           } else {
             await axios.get(`${process.env.REACT_APP_END_POINT}/api/chat/view-chat?userId=${logged_user._id}&chatId=${selectedChat._id}`);
@@ -129,6 +138,20 @@ const ChatRoom = () => {
           }
         });
         setRoom(chat);
+      } else {
+        socket = io.connect(process.env.REACT_APP_END_POINT);
+        socket.on("reload", async (data) => {
+          console.log("poi")
+          await socket.emit("join_room", logged_user._id);
+        });
+
+
+        socket.on("receive_message", (data) => {
+          console.log(data)
+          setMessages((prev_messages) => [data, ...prev_messages]);
+        });
+        setRoom(chat);
+
       }
 
     } catch(err) {
@@ -156,6 +179,7 @@ const ChatRoom = () => {
       const receive_message = data.data.message;
       if(receive_message) {
         console.log(receive_message);
+        console.log(socket)
         if(socket) {
           const data = {chatId: room._id, message: receive_message}
           await socket.emit("send_message", data);
@@ -175,14 +199,12 @@ const ChatRoom = () => {
     <DirectMessage userList={userList} onClose={onClose} isOpen={isOpen}/>
     <Flex minH="inherit" h="inherit">
       <Box minW="400px" display={["none","none", "none", "block"]} >
-        <Flex justifyContent="space-between" pr="4" bg="#f0ff2f8a" height="70px" borderRight="1px solid grey" flexWrap='wrap'>
+        <Flex justifyContent="space-between" pr="4" bg="#0316f98a" height="70px" borderRight="1px solid grey" flexWrap='wrap'>
         <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap' p="4">
           <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
           
-          <Box>
-            <Heading size='sm'>{logged_user.name}</Heading>
-          </Box>
         </Flex>
+        <GroupMessage/>
         <Logout/>
         <IconButton color="black" onClick={dmHandler}>
           <ChatIcon/>
@@ -201,10 +223,11 @@ const ChatRoom = () => {
             <Flex p="3" cursor="pointer" justifyContent="space-between" pr="10" bg={selectedChat == c._id ? "gray" : ""} onClick={() => onChatSelect(c._id)}>
 
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-            <Avatar name={chatUser.firstName +" " + chatUser.lastName} src='https://bit.ly/sage-adebayo' />
+            {c.isGroupChat ? <Avatar src='https://bit.ly/sage-adebayo' />
+: <Avatar name={chatUser.firstName +" " + chatUser.lastName} src='https://bit.ly/sage-adebayo' />}
           
             <Box>
-              <Heading size='sm'>{chatUser.firstName +" " + chatUser.lastName}</Heading>
+              {c.isGroupChat ? <Heading size='sm'>{c.chatName}</Heading> : <Heading size='sm'>{chatUser.firstName +" " + chatUser.lastName}</Heading>}
               <Text>{c.latestMessage.content}</Text>
             </Box>
             </Flex>
@@ -221,11 +244,12 @@ const ChatRoom = () => {
       </Box>
       <Box minW={["100%", "100%", "100%", "calc(100% - 400px)"]} minH="inherit">
       <Flex flex='1' gap='4' flexWrap='wrap'  p="4" bg="#f0ff2f8a" height="70px">
-        <Avatar name={endUser.firstName + " " + endUser.lastName} src='https://bit.ly/sage-adebayo' />
+      {selectedChat.isGroupChat ?<Avatar name="" src='https://bit.ly/sage-adebayo' /> :  <Avatar name={endUser.firstName + " " + endUser.lastName} src='https://bit.ly/sage-adebayo' />}
 
         <Flex alignSelf="center" flexDirection="column">
-          <Heading size='sm'>{endUser.firstName + " " + endUser.lastName}</Heading>
-          <Text>{userOnline ? "online" : ""}</Text>
+          {selectedChat.isGroupChat ? <Heading size='sm'>{selectedChat.chatName}</Heading> : <Heading size='sm'>{endUser.firstName +" " + endUser.lastName}</Heading>}
+
+          {selectedChat.isGroupChat ? "" : <Text>{userOnline ? "online" : ""}</Text>}
         </Flex>
       </Flex>
 
